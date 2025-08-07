@@ -19,7 +19,7 @@ app.use(express.json())
 
 // Serve static files from dist directory in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../dist')))
+  app.use(express.static(path.join(__dirname, '../../dist')))
 }
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY
@@ -86,7 +86,7 @@ app.get('/health', (req: Request, res: Response) => {
 // Serve React app for all other routes in production
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../dist/index.html'))
+    res.sendFile(path.join(__dirname, '../../dist/index.html'))
   })
 }
 
