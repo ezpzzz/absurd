@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: absurd
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: node dist-server/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: LMSTUDIO_PORT
+        value: 1234
+    healthCheckPath: /health
+    autoDeploy: true
+    branch: main
+    rootDir: .
+    
+databases: []
+
+staticSites: []
