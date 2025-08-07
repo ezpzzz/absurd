@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { generateSite, SiteSchema } from '../scripts/generateSite'
 
@@ -10,7 +10,7 @@ app.use(express.json())
 
 const LM_PORT = Number(process.env.LMSTUDIO_PORT) || 1234
 
-app.post('/generate', async (req, res) => {
+app.post('/generate', async (req: Request, res: Response) => {
   try {
     const lmResponse = await fetch(
       `http://localhost:${LM_PORT}/v1/chat/completions`,
@@ -26,10 +26,15 @@ app.post('/generate', async (req, res) => {
       return
     }
 
+    const reader = lmResponse.body.getReader()
     const chunks: Uint8Array[] = []
-    for await (const chunk of lmResponse.body) {
-      chunks.push(chunk)
+    
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      chunks.push(value)
     }
+    
     const aggregated = Buffer.concat(chunks).toString()
     res.setHeader('Content-Type', 'application/json')
     res.send(aggregated)
