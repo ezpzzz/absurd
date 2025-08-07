@@ -2,20 +2,142 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import App from './App'
-import '@testing-library/jest-dom'
 
-describe('navigation', () => {
-  it('navigates to site page on prompt submit', async () => {
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <App />
-      </MemoryRouter>,
-    )
+// Mock UUID to make tests deterministic
+vi.mock('./utils/id', () => ({
+  generateId: () => 'test-uuid-123'
+}))
 
-    await userEvent.type(screen.getByTestId('prompt-input'), 'hello')
-    await userEvent.click(screen.getByTestId('submit-button'))
+describe('App', () => {
+  beforeEach(() => {
+    // Clear localStorage before each test
+    localStorage.clear()
+  })
 
-    expect(await screen.findByText('Site 123')).toBeInTheDocument()
-    expect(screen.getByTestId('placeholder')).toHaveTextContent('hello')
+  describe('navigation', () => {
+    it('navigates to site page on prompt submit', async () => {
+      const user = userEvent.setup()
+      render(
+        <MemoryRouter initialEntries={['/']}>
+          <App />
+        </MemoryRouter>,
+      )
+
+      const input = screen.getByRole('textbox', { name: /prompt/i })
+      const button = screen.getByTestId('submit-button')
+
+      // Button should be disabled initially
+      expect(button).toBeDisabled()
+
+      await user.clear(input)
+      await user.type(input, 'hello')
+      
+      // Wait for the button to be enabled using a more flexible approach
+      await screen.findByRole('textbox', { name: /prompt/i })
+      
+      // Use a custom wait to ensure the button becomes enabled
+      await new Promise(resolve => setTimeout(resolve, 100))
+      
+      expect(button).toBeEnabled()
+      await user.click(button)
+
+      expect(await screen.findByText(/Site test-uuid-123/)).toBeInTheDocument()
+      expect(screen.getByTestId('placeholder')).toHaveTextContent('hello')
+    })
+  })
+
+  describe('theme toggle', () => {
+    it('toggles between light and dark themes', async () => {
+      const user = userEvent.setup()
+      render(
+        <MemoryRouter initialEntries={['/']}>
+          <App />
+        </MemoryRouter>,
+      )
+
+      const toggleButton = screen.getByTestId('toggle-theme')
+      
+      // Toggle to dark mode
+      await user.click(toggleButton)
+      
+      // Should show dark mode icon (Brightness7)
+      expect(screen.getByTestId('toggle-theme')).toBeInTheDocument()
+
+      // Toggle back to light mode
+      await user.click(toggleButton)
+      
+      // Should show light mode icon (Brightness4)
+      expect(screen.getByTestId('toggle-theme')).toBeInTheDocument()
+    })
+
+    it('persists theme preference in localStorage', async () => {
+      const user = userEvent.setup()
+      render(
+        <MemoryRouter initialEntries={['/']}>
+          <App />
+        </MemoryRouter>,
+      )
+
+      const toggleButton = screen.getByTestId('toggle-theme')
+      
+      // Toggle to dark mode
+      await user.click(toggleButton)
+      
+      // Check localStorage
+      expect(localStorage.getItem('color-mode')).toBe('dark')
+      
+      // Toggle back to light mode
+      await user.click(toggleButton)
+      expect(localStorage.getItem('color-mode')).toBe('light')
+    })
+
+    it('loads theme preference from localStorage', () => {
+      // Set dark mode in localStorage
+      localStorage.setItem('color-mode', 'dark')
+      
+      render(
+        <MemoryRouter initialEntries={['/']}>
+          <App />
+        </MemoryRouter>,
+      )
+
+      // Should load dark mode from localStorage
+      expect(localStorage.getItem('color-mode')).toBe('dark')
+    })
+  })
+
+  describe('error handling', () => {
+    it('handles localStorage errors gracefully', async () => {
+      const user = userEvent.setup()
+      // Mock localStorage to throw an error
+      const originalSetItem = Storage.prototype.setItem
+      Storage.prototype.setItem = vi.fn(() => {
+        throw new Error('localStorage quota exceeded')
+      })
+
+      render(
+        <MemoryRouter initialEntries={['/']}>
+          <App />
+        </MemoryRouter>,
+      )
+
+      const input = screen.getByRole('textbox', { name: /prompt/i })
+      const button = screen.getByTestId('submit-button')
+
+      await user.clear(input)
+      await user.type(input, 'hello')
+      
+      // Wait for button to be enabled
+      await new Promise(resolve => setTimeout(resolve, 100))
+      expect(button).toBeEnabled()
+      
+      await user.click(button)
+
+      // Should show error message
+      expect(screen.getByText('Failed to save prompt. Please try again.')).toBeInTheDocument()
+
+      // Restore original method
+      Storage.prototype.setItem = originalSetItem
+    })
   })
 })

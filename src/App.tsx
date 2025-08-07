@@ -1,21 +1,18 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { AppBar, CssBaseline, IconButton, Toolbar, Typography, Container } from '@mui/material'
 import { Brightness4, Brightness7 } from '@mui/icons-material'
+import { useLocalStorage } from './hooks/useLocalStorage'
 import PromptPage from './pages/PromptPage'
 import SitePage from './pages/SitePage'
 
 const App = () => {
-  const [mode, setMode] = useState<'light' | 'dark'>(
-    () => (localStorage.getItem('color-mode') as 'light' | 'dark') || 'light',
-  )
+  const [mode, setMode] = useLocalStorage<'light' | 'dark'>('color-mode', 'light')
   const theme = useMemo(() => createTheme({ palette: { mode } }), [mode])
 
   const toggleTheme = () => {
-    const next = mode === 'light' ? 'dark' : 'light'
-    setMode(next)
-    localStorage.setItem('color-mode', next)
+    setMode(mode === 'light' ? 'dark' : 'light')
   }
 
   return (
