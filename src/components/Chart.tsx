@@ -1,12 +1,12 @@
 import React from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
-interface FigureProps {
+interface ChartProps {
   title: string
   data: number[]
 }
 
-const Figure: React.FC<FigureProps> = ({ title, data }) => {
+const Chart: React.FC<ChartProps> = ({ title, data }) => {
   const chartData = data.map((value, idx) => ({
     name: `Item ${idx + 1}`,
     value,
@@ -44,4 +44,4 @@ const Figure: React.FC<FigureProps> = ({ title, data }) => {
   )
 }
 
-export default Figure
+export default Chart
