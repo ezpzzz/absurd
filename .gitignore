@@ -11,3 +11,6 @@ vite.config.ts.timestamp-*
 
 # others
 *.local
+# Generated sites
+src/generated/*
+!src/generated/routes.ts
