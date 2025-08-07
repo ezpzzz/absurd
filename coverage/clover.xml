@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1754565393817" clover="3.2.0">
-  <project timestamp="1754565393817" name="All files">
+<coverage generated="1754565802820" clover="3.2.0">
+  <project timestamp="1754565802820" name="All files">
     <metrics statements="26" coveredstatements="26" conditionals="4" coveredconditionals="4" methods="6" coveredmethods="6" elements="36" coveredelements="36" complexity="0" loc="26" ncloc="26" packages="1" files="2" classes="2"/>
     <file name="Chart.tsx" path="/Users/alex/absurd/src/components/Chart.tsx">
       <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>

@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw'
 
 export const handlers = [
-  http.post('http://localhost:1234/v1/chat/completions', () => {
+  http.post('https://api.groq.com/openai/v1/chat/completions', () => {
     const encoder = new TextEncoder()
     const stream = new ReadableStream<Uint8Array>({
       start(controller: ReadableStreamDefaultController<Uint8Array>): void {

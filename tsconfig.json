@@ -15,8 +15,9 @@
     "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
-      "types": ["jest", "node"]
+      "types": ["node"]
   },
   "include": ["src", "server", "scripts"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

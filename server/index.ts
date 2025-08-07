@@ -17,25 +17,33 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../dist')))
 }
 
-const LM_PORT = Number(process.env.LMSTUDIO_PORT) || 1234
+const GROQ_API_KEY = process.env.GROQ_API_KEY
 
 app.post('/generate', async (req: Request, res: Response) => {
   try {
-    const lmResponse = await fetch(
-      `http://localhost:${LM_PORT}/v1/chat/completions`,
+    if (!GROQ_API_KEY) {
+      res.status(500).json({ error: 'Groq API key not configured' })
+      return
+    }
+
+    const groqResponse = await fetch(
+      'https://api.groq.com/openai/v1/chat/completions',
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${GROQ_API_KEY}`
+        },
         body: JSON.stringify(req.body),
       },
     )
 
-    if (!lmResponse.body) {
-      res.status(500).json({ error: 'Empty response from LM Studio' })
+    if (!groqResponse.body) {
+      res.status(500).json({ error: 'Empty response from Groq' })
       return
     }
 
-    const reader = lmResponse.body.getReader()
+    const reader = groqResponse.body.getReader()
     const chunks: Uint8Array[] = []
     
     while (true) {
@@ -56,7 +64,7 @@ app.post('/generate', async (req: Request, res: Response) => {
       // ignore invalid JSON or validation errors
     }
   } catch (err) {
-    res.status(500).json({ error: 'Failed to reach LM Studio' })
+    res.status(500).json({ error: 'Failed to reach Groq API' })
   }
 })
 

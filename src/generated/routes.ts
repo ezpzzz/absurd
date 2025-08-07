@@ -9,5 +9,5 @@ export const generatedRoutes: GeneratedRoute[] = []
 
 generatedRoutes.push({
   path: '/site/test',
-  component: lazy(() => import('./test/index/index.tsx')),
+  component: lazy(() => import('./test/index/index')),
 })

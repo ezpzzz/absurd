@@ -40,7 +40,7 @@ export async function generateSite(rawSchema) {
         const pageDir = path.join(baseDir, page.slug);
         await fs.mkdir(pageDir, { recursive: true });
         const chartLines = schema.charts
-        .map((chart) => `      <Chart title="${chart.title}" data={[${chart.data.join(', ')}]} />`)
+            .map((chart) => `      <Chart title="${chart.title}" data={[${chart.data.join(', ')}]} />`)
             .join('\n');
         const citationLines = schema.citations
             .map((c) => `        <li>${formatCitation(c)}</li>`)
