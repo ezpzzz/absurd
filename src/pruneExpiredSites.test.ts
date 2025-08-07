@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import os from 'os';
 import { execSync } from 'child_process';
-import { pruneExpiredSites } from '../scripts/pruneExpiredSites.js';
+import { pruneExpiredSites } from '../scripts/pruneExpiredSites';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
