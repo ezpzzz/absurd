@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import cors from 'cors'
 import path from 'path'
 import { generateSite } from '../scripts/generateSite'
+import { Groq } from 'groq-sdk'
 
 const app = express()
 
@@ -18,6 +19,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY
+const groq = new Groq({ apiKey: GROQ_API_KEY })
 
 app.post('/generate', async (req: Request, res: Response) => {
   try {
@@ -26,44 +28,48 @@ app.post('/generate', async (req: Request, res: Response) => {
       return
     }
 
-    const groqResponse = await fetch(
-      'https://api.groq.com/openai/v1/chat/completions',
-      {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${GROQ_API_KEY}`
-        },
-        body: JSON.stringify(req.body),
-      },
-    )
+    // Extract messages from request body, or use a default
+    const messages = req.body?.messages || [
+      { role: 'user', content: req.body?.prompt || 'Hello' }
+    ]
 
-    if (!groqResponse.body) {
-      res.status(500).json({ error: 'Empty response from Groq' })
-      return
+    const chatCompletion = await groq.chat.completions.create({
+      messages,
+      model: 'openai/gpt-oss-20b',
+      temperature: 1,
+      max_completion_tokens: 8192,
+      top_p: 1,
+      stream: true,
+      reasoning_effort: 'medium',
+      stop: null
+    })
+
+    // Set headers for streaming response
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+    res.setHeader('Transfer-Encoding', 'chunked')
+
+    let fullResponse = ''
+
+    // Stream the response
+    for await (const chunk of chatCompletion) {
+      const content = chunk.choices[0]?.delta?.content || ''
+      if (content) {
+        fullResponse += content
+        res.write(content)
+      }
     }
 
-    const reader = groqResponse.body.getReader()
-    const chunks: Uint8Array[] = []
-    
-    while (true) {
-      const { done, value } = await reader.read()
-      if (done) break
-      chunks.push(value)
-    }
-    
-    const aggregated = Buffer.concat(chunks).toString()
-    res.setHeader('Content-Type', 'application/json')
-    res.send(aggregated)
+    res.end()
 
+    // Fire and forget site generation with validation
     try {
-      const rawData = JSON.parse(aggregated)
-      // Fire and forget site generation with validation
+      const rawData = JSON.parse(fullResponse)
       generateSite(rawData).catch(() => {})
     } catch {
       // ignore invalid JSON or validation errors
     }
   } catch (err) {
+    console.error('Groq API error:', err)
     res.status(500).json({ error: 'Failed to reach Groq API' })
   }
 })
