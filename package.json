@@ -13,7 +13,7 @@
     "test:e2e": "playwright test",
     "coverage:badge": "coverage-badges",
     "prune": "node scripts/pruneExpiredSites.js",
-    "prepare": "is-ci || husky install"
+    "prepare": "npx is-ci || npx husky install"
   },
   "dependencies": {
     "@emotion/react": "^11.0.0",
