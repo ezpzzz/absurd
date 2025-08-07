@@ -1,0 +1,54 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Figure > renders chart with alt text and table snapshot 1`] = `
+<div>
+  <figure>
+    <canvas
+      aria-label="Test Chart"
+      data="[object Object]"
+      role="img"
+    />
+    <figcaption>
+      Test Chart
+    </figcaption>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            Label
+          </th>
+          <th>
+            Value
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            Item 1
+          </td>
+          <td>
+            1
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Item 2
+          </td>
+          <td>
+            2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Item 3
+          </td>
+          <td>
+            3
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </figure>
+</div>
+`;
