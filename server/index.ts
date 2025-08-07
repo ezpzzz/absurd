@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import path from 'path'
-import { generateSite } from '../scripts/generateSite'
+import { generateSite } from '../scripts/generateSite.js'
 import { Groq } from 'groq-sdk'
 
 const app = express()
