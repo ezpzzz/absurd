@@ -10,6 +10,7 @@
     "start": "node dist-server/index.js",
     "lint": "eslint . --ext ts,tsx",
     "test": "vitest",
+    "prune": "node scripts/pruneExpiredSites.js",
     "prepare": "husky install"
   },
   "dependencies": {
