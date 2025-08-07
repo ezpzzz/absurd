@@ -1,0 +1,45 @@
+import express from 'express'
+import cors from 'cors'
+
+const app = express()
+
+// enable CORS for Vite dev server
+app.use(cors({ origin: 'http://localhost:5173' }))
+app.use(express.json())
+
+const LM_PORT = Number(process.env.LMSTUDIO_PORT) || 1234
+
+app.post('/generate', async (req, res) => {
+  try {
+    const lmResponse = await fetch(
+      `http://localhost:${LM_PORT}/v1/chat/completions`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(req.body),
+      },
+    )
+
+    if (!lmResponse.body) {
+      res.status(500).json({ error: 'Empty response from LM Studio' })
+      return
+    }
+
+    const chunks: Uint8Array[] = []
+    for await (const chunk of lmResponse.body) {
+      chunks.push(chunk)
+    }
+    const aggregated = Buffer.concat(chunks).toString()
+    res.setHeader('Content-Type', 'application/json')
+    res.send(aggregated)
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to reach LM Studio' })
+  }
+})
+
+export default app
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const port = Number(process.env.PORT) || 3000
+  app.listen(port)
+}
