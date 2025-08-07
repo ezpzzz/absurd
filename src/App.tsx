@@ -1,34 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useMemo } from 'react'
+import { Route, Routes } from 'react-router-dom'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { AppBar, CssBaseline, IconButton, Toolbar, Typography, Container } from '@mui/material'
+import { Brightness4, Brightness7 } from '@mui/icons-material'
+import { useLocalStorage } from './hooks/useLocalStorage'
+import PromptPage from './pages/PromptPage'
+import SitePage from './pages/SitePage'
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [mode, setMode] = useLocalStorage<'light' | 'dark'>('color-mode', 'light')
+  const theme = useMemo(() => createTheme({ palette: { mode } }), [mode])
+
+  const toggleTheme = () => {
+    setMode(mode === 'light' ? 'dark' : 'light')
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            Absurd
+          </Typography>
+          <IconButton color="inherit" onClick={toggleTheme} data-testid="toggle-theme">
+            {mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <Container sx={{ mt: 4 }}>
+        <Routes>
+          <Route path="/" element={<PromptPage />} />
+          <Route path="/site/:id" element={<SitePage />} />
+        </Routes>
+      </Container>
+    </ThemeProvider>
   )
 }
 
