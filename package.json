@@ -41,7 +41,8 @@
     "vitest": "^1.0.0",
     "jsdom": "^23.0.0",
     "@types/uuid": "^9.0.0",
-    "supertest": "^6.4.2"
+    "supertest": "^6.4.2",
+    "@types/supertest": "^6.0.0"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": ["eslint --fix", "prettier --write"],
