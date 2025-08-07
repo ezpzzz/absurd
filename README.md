@@ -1,6 +1,6 @@
 # Absurd
 
-[![CI](https://github.com/ezpzzz/absurd/actions/workflows/ci.yml/badge.svg)](https://github.com/ezpzzz/absurd/actions/workflows/ci.yml)
+[![CI](https://github.com/ezpzzz/absurd/actions/workflows/ci.yml/badge.svg)](https://github.com/ezpzzz/absurd/actions/workflows/ci.yml) ![Coverage](./coverage/badges/lines.svg)
 
 A React 19 + TypeScript application with routing, theme management, and prompt-based site generation features. Built with Vite, Material-UI, and comprehensive testing.
 
@@ -10,7 +10,7 @@ A React 19 + TypeScript application with routing, theme management, and prompt-b
 - 🎨 **Material-UI** with dark/light theme toggle and persistence 
 - 🧭 **React Router** for navigation and URL management
 - 💾 **localStorage Integration** with error handling and custom hooks
-- 🧪 **Comprehensive Testing** with Vitest and Testing Library
+  - 🧪 **Comprehensive Testing** with Jest, Testing Library, and Playwright
 - 🔧 **Development Tools** - ESLint, Prettier, Husky pre-commit hooks
 - 🚀 **CI/CD Pipeline** with GitHub Actions
 
@@ -64,8 +64,8 @@ npm run build
 - `npm run dev` - Start Vite development server with HMR
 - `npm run build` - Type-check and build optimized production bundle
 - `npm run lint` - Run ESLint with TypeScript support
-- `npm test` - Run test suite with Vitest in watch mode
-- `npm test -- --run` - Run tests once (used in CI)
+  - `npm test` - Run Jest unit tests with coverage
+  - `npm run test:e2e` - Run Playwright end-to-end tests
 
 ## Project Structure
 
@@ -74,12 +74,12 @@ npm run build
 - **Build Tool**: Vite for fast development and optimized builds
 - **UI Library**: Material-UI v6 with Emotion styling
 - **Routing**: React Router v7 for client-side navigation
-- **Testing**: Vitest + Testing Library + jsdom environment
+  - **Testing**: Jest + Testing Library for units and Playwright for e2e
 
 ### Backend  
 - **Runtime**: Node.js with TypeScript
 - **Framework**: Express.js with CORS support
-- **Testing**: Supertest for API testing
+  - **Testing**: Jest + Supertest for API testing
 
 ### Development Workflow
 - **Code Quality**: ESLint + Prettier with consistent formatting
@@ -88,22 +88,17 @@ npm run build
 
 ## Testing
 
-The project includes comprehensive test coverage:
-
-- **Navigation Tests** - Verify routing and form submission flows
-- **Theme Toggle** - Test dark/light mode persistence
-- **Error Handling** - localStorage failures and edge cases
-- **User Interactions** - Form validation and button states
+Unit tests use Jest with React Testing Library while Playwright covers the end-to-end flow.
 
 ```sh
-# Run all tests
+# Run unit tests with coverage
 npm test
 
-# Run tests with coverage
-npm test -- --coverage
+# Run e2e tests
+npm run test:e2e
 
-# Run tests in CI mode
-npm test -- --run
+# Generate coverage badge
+npm run coverage:badge
 ```
 
 ## Deployment

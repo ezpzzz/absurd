@@ -1,4 +1,3 @@
-import { describe, it, expect, vi } from 'vitest';
 import { promises as fs } from 'fs';
 import path from 'path';
 import os from 'os';
@@ -9,9 +8,9 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 describe('pruneExpiredSites', () => {
   it('removes directories older than 24h and keeps others', async () => {
-    vi.useFakeTimers();
-    const now = new Date('2024-01-02T00:00:00Z');
-    vi.setSystemTime(now);
+      jest.useFakeTimers();
+      const now = new Date('2024-01-02T00:00:00Z');
+      jest.setSystemTime(now);
 
     const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'prune-'));
     execSync('git init', { cwd: tmp });
@@ -42,6 +41,6 @@ describe('pruneExpiredSites', () => {
     const nojekyllExists = await fs.stat(nojekyllPath).then(() => true).catch(() => false);
     expect(nojekyllExists).toBe(true);
 
-    vi.useRealTimers();
+      jest.useRealTimers();
+    });
   });
-});

@@ -1,4 +1,4 @@
-import { LazyExoticComponent, ComponentType } from 'react'
+import { LazyExoticComponent, ComponentType, lazy } from 'react'
 
 export interface GeneratedRoute {
   path: string
@@ -6,3 +6,8 @@ export interface GeneratedRoute {
 }
 
 export const generatedRoutes: GeneratedRoute[] = []
+
+generatedRoutes.push({
+  path: '/site/test',
+  component: lazy(() => import('./test/index/index.tsx')),
+})

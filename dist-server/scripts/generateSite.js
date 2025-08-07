@@ -40,12 +40,12 @@ export async function generateSite(rawSchema) {
         const pageDir = path.join(baseDir, page.slug);
         await fs.mkdir(pageDir, { recursive: true });
         const chartLines = schema.charts
-            .map((chart) => `      <Figure title="${chart.title}" data={[${chart.data.join(', ')}]} />`)
+        .map((chart) => `      <Chart title="${chart.title}" data={[${chart.data.join(', ')}]} />`)
             .join('\n');
         const citationLines = schema.citations
             .map((c) => `        <li>${formatCitation(c)}</li>`)
             .join('\n');
-        const content = `import React from 'react'\nimport Figure from '../../../components/Figure'\n\nconst Page = () => (\n  <div>\n    <h1>${page.title}</h1>\n    <p>${page.body}</p>\n${chartLines ? `    <div>\n${chartLines}\n    </div>\n` : ''}    <ol>\n${citationLines}\n    </ol>\n  </div>\n)\n\nexport default Page\n`;
+        const content = `import React from 'react'\nimport Chart from '../../../components/Chart'\n\nconst Page = () => (\n  <div>\n    <h1>${page.title}</h1>\n    <p>${page.body}</p>\n${chartLines ? `    <div>\n${chartLines}\n    </div>\n` : ''}    <ol>\n${citationLines}\n    </ol>\n  </div>\n)\n\nexport default Page\n`;
         await fs.writeFile(path.join(pageDir, 'index.tsx'), content);
         const routePath = page.slug === 'index' ? `/site/${schema.id}` : `/site/${schema.id}/${page.slug}`;
         const importPath = `./${schema.id}/${page.slug}/index.tsx`;
