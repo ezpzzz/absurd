@@ -7,11 +7,11 @@ import { useLocalStorage } from './hooks/useLocalStorage'
 import PromptPage from './pages/PromptPage'
 import { generatedRoutes } from './generated/routes'
 
-const App = () => {
+const App = (): React.JSX.Element => {
   const [mode, setMode] = useLocalStorage<'light' | 'dark'>('color-mode', 'light')
   const theme = useMemo(() => createTheme({ palette: { mode } }), [mode])
 
-  const toggleTheme = () => {
+  const toggleTheme = (): void => {
     setMode(mode === 'light' ? 'dark' : 'light')
   }
 

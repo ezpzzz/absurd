@@ -5,7 +5,7 @@ import App from './App'
 
 // Mock UUID to make tests deterministic
 vi.mock('./utils/id', () => ({
-  generateId: () => 'test-uuid-123'
+  generateId: (): string => 'test-uuid-123'
 }))
 
 describe('App', () => {
@@ -39,7 +39,7 @@ describe('App', () => {
       const mockNavigate = vi.fn()
       vi.doMock('react-router-dom', () => ({
         ...vi.importActual('react-router-dom'),
-        useNavigate: () => mockNavigate
+        useNavigate: (): typeof mockNavigate => mockNavigate
       }))
       
       await user.click(button)
@@ -50,7 +50,7 @@ describe('App', () => {
   })
 
   describe('theme toggle', () => {
-    it('toggles between light and dark themes', async () => {
+    it('toggles between light and dark themes', async (): Promise<void> => {
       const user = userEvent.setup()
       render(
         <MemoryRouter initialEntries={['/']}>

@@ -4,12 +4,12 @@ import { Box, Button, TextField, Alert } from '@mui/material'
 import { generateId } from '../utils/id'
 import { setLocalStorageItem } from '../hooks/useLocalStorage'
 
-const PromptForm = () => {
+const PromptForm = (): React.JSX.Element => {
   const [prompt, setPrompt] = useState('')
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault()
     setError(null)
     const id = generateId()
@@ -32,7 +32,7 @@ const PromptForm = () => {
       <TextField
         label="Prompt"
         value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
+        onChange={(e): void => setPrompt(e.target.value)}
         fullWidth
         multiline
         minRows={3}

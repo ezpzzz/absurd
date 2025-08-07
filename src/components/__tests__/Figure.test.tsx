@@ -4,13 +4,13 @@ import { vi } from 'vitest'
 import Figure from '../Figure'
 
 vi.mock('recharts', () => ({
-  BarChart: ({ children }: { children: React.ReactNode }) => <div data-testid="bar-chart">{children}</div>,
-  Bar: () => <div data-testid="bar" />,
-  XAxis: () => <div data-testid="x-axis" />,
-  YAxis: () => <div data-testid="y-axis" />,
-  CartesianGrid: () => <div data-testid="grid" />,
-  Tooltip: () => <div data-testid="tooltip" />,
-  ResponsiveContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="responsive-container">{children}</div>,
+  BarChart: ({ children }: { children: React.ReactNode }): React.JSX.Element => <div data-testid="bar-chart">{children}</div>,
+  Bar: (): React.JSX.Element => <div data-testid="bar" />,
+  XAxis: (): React.JSX.Element => <div data-testid="x-axis" />,
+  YAxis: (): React.JSX.Element => <div data-testid="y-axis" />,
+  CartesianGrid: (): React.JSX.Element => <div data-testid="grid" />,
+  Tooltip: (): React.JSX.Element => <div data-testid="tooltip" />,
+  ResponsiveContainer: ({ children }: { children: React.ReactNode }): React.JSX.Element => <div data-testid="responsive-container">{children}</div>,
 }))
 
 describe('Figure', () => {
