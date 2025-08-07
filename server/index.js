@@ -29,12 +29,12 @@ app.post('/generate', async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         res.send(aggregated);
         try {
-            const schema = JSON.parse(aggregated);
-            // Fire and forget site generation
-            generateSite(schema).catch(() => { });
+            const rawData = JSON.parse(aggregated);
+            // Fire and forget site generation with validation
+            generateSite(rawData).catch(() => { });
         }
         catch {
-            // ignore invalid JSON
+            // ignore invalid JSON or validation errors
         }
     }
     catch (err) {

@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
-import { generateSite, SiteSchema } from '../scripts/generateSite'
+import { generateSite } from '../scripts/generateSite'
 
 const app = express()
 
@@ -40,11 +40,11 @@ app.post('/generate', async (req: Request, res: Response) => {
     res.send(aggregated)
 
     try {
-      const schema = JSON.parse(aggregated) as SiteSchema
-      // Fire and forget site generation
-      generateSite(schema).catch(() => {})
+      const rawData = JSON.parse(aggregated)
+      // Fire and forget site generation with validation
+      generateSite(rawData).catch(() => {})
     } catch {
-      // ignore invalid JSON
+      // ignore invalid JSON or validation errors
     }
   } catch (err) {
     res.status(500).json({ error: 'Failed to reach LM Studio' })

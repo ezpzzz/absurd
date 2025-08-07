@@ -1,8 +1,5 @@
 import React from 'react'
-import { Bar } from 'react-chartjs-2'
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js'
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend)
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 interface FigureProps {
   title: string
@@ -10,20 +7,22 @@ interface FigureProps {
 }
 
 const Figure: React.FC<FigureProps> = ({ title, data }) => {
-  const chartData = {
-    labels: data.map((_, idx) => `Item ${idx + 1}`),
-    datasets: [
-      {
-        label: title,
-        data,
-        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-      },
-    ],
-  }
+  const chartData = data.map((value, idx) => ({
+    name: `Item ${idx + 1}`,
+    value,
+  }))
 
   return (
     <figure>
-      <Bar data={chartData} aria-label={title} role="img" />
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="value" fill="rgba(75, 192, 192, 0.8)" />
+        </BarChart>
+      </ResponsiveContainer>
       <figcaption>{title}</figcaption>
       <table>
         <thead>

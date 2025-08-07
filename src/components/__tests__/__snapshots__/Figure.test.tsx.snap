@@ -3,11 +3,29 @@
 exports[`Figure > renders chart with alt text and table snapshot 1`] = `
 <div>
   <figure>
-    <canvas
-      aria-label="Test Chart"
-      data="[object Object]"
-      role="img"
-    />
+    <div
+      data-testid="responsive-container"
+    >
+      <div
+        data-testid="bar-chart"
+      >
+        <div
+          data-testid="grid"
+        />
+        <div
+          data-testid="x-axis"
+        />
+        <div
+          data-testid="y-axis"
+        />
+        <div
+          data-testid="tooltip"
+        />
+        <div
+          data-testid="bar"
+        />
+      </div>
+    </div>
     <figcaption>
       Test Chart
     </figcaption>

@@ -1,31 +1,35 @@
 import { promises as fs } from 'fs'
 import path from 'path'
 import { spawn } from 'child_process'
+import { z } from 'zod'
 
-// JSON schema definitions
-interface Citation {
-  text: string
-  url: string
-}
+// Zod schema definitions
+const CitationSchema = z.object({
+  text: z.string(),
+  url: z.string().url(),
+})
 
-interface Chart {
-  title: string
-  data: number[]
-}
+const ChartSchema = z.object({
+  title: z.string(),
+  data: z.array(z.number()),
+})
 
-interface Page {
-  slug: string
-  title: string
-  body: string
-}
+const PageSchema = z.object({
+  slug: z.string(),
+  title: z.string(),
+  body: z.string(),
+})
 
-export interface SiteSchema {
-  id: string
-  expiryTimestamp: number
-  pages: Page[]
-  citations: Citation[]
-  charts: Chart[]
-}
+export const SiteSchema = z.object({
+  id: z.string(),
+  expiryTimestamp: z.number(),
+  pages: z.array(PageSchema),
+  citations: z.array(CitationSchema),
+  charts: z.array(ChartSchema),
+})
+
+export type SiteSchemaType = z.infer<typeof SiteSchema>
+type Citation = z.infer<typeof CitationSchema>
 
 // Minimal Mustache-style renderer (placeholder for full library)
 function formatCitation(citation: Citation): string {
@@ -37,7 +41,8 @@ function formatCitation(citation: Citation): string {
   return `${author}. (${year}). ${citation.text}. ${citation.url}`
 }
 
-export async function generateSite(schema: SiteSchema): Promise<void> {
+export async function generateSite(rawSchema: unknown): Promise<void> {
+  const schema = SiteSchema.parse(rawSchema)
   const baseDir = path.join(process.cwd(), 'src', 'generated', schema.id)
   const routeLines: string[] = []
   for (const page of schema.pages) {
