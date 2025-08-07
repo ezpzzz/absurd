@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import { generateSite, SiteSchema } from '../scripts/generateSite'
 
 const app = express()
 
@@ -32,6 +33,14 @@ app.post('/generate', async (req, res) => {
     const aggregated = Buffer.concat(chunks).toString()
     res.setHeader('Content-Type', 'application/json')
     res.send(aggregated)
+
+    try {
+      const schema = JSON.parse(aggregated) as SiteSchema
+      // Fire and forget site generation
+      generateSite(schema).catch(() => {})
+    } catch {
+      // ignore invalid JSON
+    }
   } catch (err) {
     res.status(500).json({ error: 'Failed to reach LM Studio' })
   }

@@ -1,7 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
+import { promises as fs } from 'fs'
+import path from 'path'
 import App from './App'
+import { generateSite } from '../scripts/generateSite'
 
 // Mock UUID to make tests deterministic
 vi.mock('./utils/id', () => ({
@@ -9,13 +12,36 @@ vi.mock('./utils/id', () => ({
 }))
 
 describe('App', () => {
+  const routesPath = path.join(process.cwd(), 'src', 'generated', 'routes.ts')
+  let originalRoutes = ''
+
+  beforeAll(async () => {
+    originalRoutes = await fs.readFile(routesPath, 'utf8')
+  })
+
+  afterAll(async () => {
+    await fs.writeFile(routesPath, originalRoutes)
+    await fs.rm(path.join(process.cwd(), 'src', 'generated', 'test-uuid-123'), {
+      recursive: true,
+      force: true,
+    })
+  })
   beforeEach(() => {
     // Clear localStorage before each test
     localStorage.clear()
   })
 
   describe('navigation', () => {
-    it('navigates to site page on prompt submit', async () => {
+    it('navigates to generated site on prompt submit', async () => {
+      // pre-generate site for deterministic id
+      await generateSite({
+        id: 'test-uuid-123',
+        expiryTimestamp: Date.now(),
+        pages: [{ slug: 'index', title: 'Test Heading', body: 'Lorem ipsum' }],
+        citations: [],
+        charts: [],
+      })
+
       const user = userEvent.setup()
       render(
         <MemoryRouter initialEntries={['/']}>
@@ -26,23 +52,18 @@ describe('App', () => {
       const input = screen.getByRole('textbox', { name: /prompt/i })
       const button = screen.getByTestId('submit-button')
 
-      // Button should be disabled initially
       expect(button).toBeDisabled()
 
       await user.clear(input)
       await user.type(input, 'hello')
-      
-      // Wait for the button to be enabled using a more flexible approach
-      await screen.findByRole('textbox', { name: /prompt/i })
-      
-      // Use a custom wait to ensure the button becomes enabled
+
       await new Promise(resolve => setTimeout(resolve, 100))
-      
+
       expect(button).toBeEnabled()
       await user.click(button)
 
-      expect(await screen.findByText(/Site test-uuid-123/)).toBeInTheDocument()
-      expect(screen.getByTestId('placeholder')).toHaveTextContent('hello')
+      expect(await screen.findByText('Test Heading')).toBeInTheDocument()
+      expect(screen.getByText('Lorem ipsum')).toBeInTheDocument()
     })
   })
 

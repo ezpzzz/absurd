@@ -5,7 +5,7 @@ import { AppBar, CssBaseline, IconButton, Toolbar, Typography, Container } from 
 import { Brightness4, Brightness7 } from '@mui/icons-material'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import PromptPage from './pages/PromptPage'
-import SitePage from './pages/SitePage'
+import { generatedRoutes } from './generated/routes'
 
 const App = () => {
   const [mode, setMode] = useLocalStorage<'light' | 'dark'>('color-mode', 'light')
@@ -31,7 +31,9 @@ const App = () => {
       <Container sx={{ mt: 4 }}>
         <Routes>
           <Route path="/" element={<PromptPage />} />
-          <Route path="/site/:id" element={<SitePage />} />
+          {generatedRoutes.map(({ path, component: Component }) => (
+            <Route key={path} path={path} element={<Component />} />
+          ))}
         </Routes>
       </Container>
     </ThemeProvider>
