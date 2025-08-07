@@ -1,0 +1,13 @@
+node_modules
+.DS_Store
+dist
+vite.config.ts.timestamp-*
+.idea
+.env
+
+# Vite
+dist
+vite.config.ts.timestamp-* 
+
+# others
+*.local
