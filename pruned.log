@@ -1,0 +1,5 @@
+
+> absurd@0.0.0 prune
+> node scripts/pruneExpiredSites.js
+
+No expired sites found
