@@ -4,6 +4,16 @@
 
 A React 19 + TypeScript application with routing, theme management, and prompt-based site generation features. Built with Vite, Material-UI, and comprehensive testing.
 
+## Quick Start
+
+```sh
+pnpm install
+pnpm dev
+```
+
+LM Studio should be running locally so the server can generate content.
+
+
 ## Features
 
 - ⚡ **React 19** with TypeScript for modern development
@@ -16,56 +26,53 @@ A React 19 + TypeScript application with routing, theme management, and prompt-b
 
 ## Architecture
 
+```mermaid
+graph TD
+  A[User] --> B[Vite-powered React 19 App]
+  B --> C[Express API Server]
+  C --> D[LM Studio]
+  B --> E[GitHub Actions CI]
 ```
-src/
-├── components/         # Reusable UI components
-│   └── PromptForm.tsx  # Main prompt input form
-├── pages/              # Route-based page components
-│   ├── PromptPage.tsx  # Home page with prompt form
-│   └── SitePage.tsx    # Generated site display page
-├── hooks/              # Custom React hooks
-│   └── useLocalStorage.ts  # localStorage management with error handling
-├── utils/              # Utility functions
-│   └── id.ts          # UUID generation utilities
-└── App.tsx            # Main app with routing and theme provider
-```
+
+See [docs/architecture.md](docs/architecture.md) for more details.
+
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 20+
-- npm
+- pnpm
 
 ### Installation
 
 ```sh
-npm install
+pnpm install
 ```
 
 ### Development
 
 ```sh
 # Start development server
-npm run dev
+pnpm dev
 
 # Run tests
-npm test
+pnpm test
 
 # Run linting
-npm run lint
+pnpm lint
 
 # Build for production
-npm run build
+pnpm build
 ```
 
 ## Available Scripts
 
-- `npm run dev` - Start Vite development server with HMR
-- `npm run build` - Type-check and build optimized production bundle
-- `npm run lint` - Run ESLint with TypeScript support
-  - `npm test` - Run Jest unit tests with coverage
-  - `npm run test:e2e` - Run Playwright end-to-end tests
+- `pnpm dev` - Start Vite development server with HMR
+- `pnpm build` - Type-check and build optimized production bundle
+- `pnpm lint` - Run ESLint with TypeScript support
+  - `pnpm test` - Run Jest unit tests with coverage
+  - `pnpm test:e2e` - Run Playwright end-to-end tests
 
 ## Project Structure
 
@@ -92,13 +99,13 @@ Unit tests use Jest with React Testing Library while Playwright covers the end-t
 
 ```sh
 # Run unit tests with coverage
-npm test
+pnpm test
 
 # Run e2e tests
-npm run test:e2e
+pnpm test:e2e
 
 # Generate coverage badge
-npm run coverage:badge
+pnpm coverage:badge
 ```
 
 ## Deployment
@@ -110,15 +117,20 @@ The application is configured for deployment with:
 - Automated CI/CD pipeline via GitHub Actions
 - Static asset optimization and bundling
 
+## FAQ
+
+**Why React 19\?**  
+React 19 enables modern features like Server Components and improved Suspense.
+
+**Do I need LM Studio running\?**  
+Yes, run LM Studio in server mode locally before using `pnpm dev`.
+
+**How do I report a bug\?**  
+Use the provided issue template under .github.
+
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes with tests
-4. Run `npm run lint` and `npm test` to ensure quality
-5. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines and coding standards.
 
 ## License
 
